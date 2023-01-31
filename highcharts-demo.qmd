@@ -1,0 +1,11 @@
+---
+title: "Highcharts Demo"
+author: "Sara Colom & Eve Perry"
+date: today
+format: bhhi-quarto-html
+---
+
+```{r setup}
+library(bhhi.doc)
+```
+

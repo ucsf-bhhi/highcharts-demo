@@ -2,10 +2,16 @@
 title: "Highcharts Demo"
 author: "Sara Colom & Eve Perry"
 date: today
-format: bhhi-quarto-html
+format: 
+  bhhi-quarto-html:
+    embed-resources: true
 ---
 
 ```{r setup}
 library(bhhi.doc)
+library(tidyverse)
+library(highcharter)
+library(reactable)
+library(kableExtra)
 ```
 

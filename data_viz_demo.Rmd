@@ -12,6 +12,21 @@ output:
 
 library(tidyverse)
 library(stringr)
-library()
+library(highcharter)
+
+source("aesthetics.R")
 ```
+
+
+
+```{r}
+airquality %>% 
+  hchart(., 
+         type = "scatter", 
+         color = "blue1",
+         hcaes(x = Month, 
+               y = Temp))
+```
+
+
 

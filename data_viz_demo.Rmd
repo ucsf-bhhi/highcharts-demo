@@ -5,28 +5,70 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     df_print: kable
+    code_folding: hide
 ---
 
-```{r}
+```{r, message = F, warning = F}
 # Read in data & libraries
-
 library(tidyverse)
 library(stringr)
 library(highcharter)
+library(bhhi.doc)
+
+# Read in weighted state survey data
+dat_w <- read_rds("../../state_survey_benchmarking/data/clean_dat_final.rds")
+
+state <- read.csv("../../state_survey_benchmarking/data/statewide_survey_processed_2023_01_20_20_55_42.csv")
 
 source("aesthetics.R")
 ```
 
 
 
+# Scatter plot
+
 ```{r}
 airquality %>% 
   hchart(., 
          type = "scatter", 
-         color = "blue1",
+         color = bhhi_palette("yellow", names = FALSE),
          hcaes(x = Month, 
                y = Temp))
 ```
 
+# Bar graph
 
+```{r}
+dat_w %>% 
+  filter(variable == "sheltered") %>% 
+    hchart(., 
+         type = "bar", 
+         color = bhhi_palette("yellow", names = FALSE),
+         hcaes(x = county, 
+               y = freq),
+         name = "Frequency") %>% 
+           hc_xAxis(
+           title = ""
+         ) %>% 
+  hc_yAxis(
+    title = list(text = "Frequency")
+  ) %>% 
+  hc_title(
+    text = "Frequency of Sheltered by County"
+  ) %>% 
+  hc_caption(text = "Weighted frequencies are shown.")
+```
+
+# Histogram
+
+```{r}
+hchart(state$age_self_report,
+       type = "histogram",
+       color = bhhi_palette("blue"),
+       name = "age") %>% 
+  hc_title(text = "State Survey Age Distribution") %>% 
+  hc_yAxis(title = list(text = "Frequency")) %>% 
+  hc_xAxis(title = list(text = "Age")) %>% 
+  hc_caption(text = "Unweighted data is shown.")
+```
 

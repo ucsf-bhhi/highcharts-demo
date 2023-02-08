@@ -8,6 +8,10 @@ output:
     code_folding: hide
 ---
 
+Prepare demo plots for BHHI webpage. 
+
+Download data from `Y:\Research\BHHI\Statewide Survey\state_survey_benchmarking\data`
+
 ```{r, message = F, warning = F}
 # Read in data & libraries
 library(tidyverse)
@@ -18,7 +22,7 @@ library(bhhi.doc)
 # Read in weighted state survey data
 dat_w <- read_rds("../../state_survey_benchmarking/data/clean_dat_final.rds")
 
-state <- read.csv("../../state_survey_benchmarking/data/statewide_survey_processed_2023_01_20_20_55_42.csv")
+state <- read_rds("../../state_survey_benchmarking/data/state_cleaned.rds")
 
 source("aesthetics.R")
 ```
@@ -58,6 +62,42 @@ dat_w %>%
   ) %>% 
   hc_caption(text = "Weighted frequencies are shown.")
 ```
+
+# Grouped bar graph
+
+```{r}
+
+
+state %>%
+  filter(!is.na(veteran_status)) %>% 
+  group_by(county, veteran_status) %>% 
+  summarise(n = n(),
+            .groups = "keep") %>% 
+  ungroup() %>% 
+  mutate(colors = case_when(veteran_status == 1 ~ bhhi_palette("blue"),
+                            veteran_status == 0 ~ bhhi_palette("yellow"))) %>% 
+    hchart(., 
+         type = "bar",
+         hcaes(x = county, 
+               y = n,
+               group = veteran_status,
+               color = colors),
+         name = "Veteran status",
+         showInLegend = F) %>% 
+           hc_xAxis(
+           title = ""
+         ) %>% 
+  hc_add_series(name = "Veteran", color = bhhi_palette("blue"), marker = list(symbol = "point")) %>% 
+  hc_add_series(name = "Not veteran", color = bhhi_palette("yellow"), marker = list(symbol = "point")) %>% 
+  hc_yAxis(
+    title = list(text = "Frequency")
+  ) %>% 
+  hc_title(
+    text = "Count of Veteran Status by County"
+  ) %>% 
+  hc_caption(text = "Unweighted counts are shown.")
+```
+
 
 # Histogram
 
